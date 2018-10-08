@@ -12,15 +12,18 @@ with open('regression_dataset.csv') as csv_file:
         if(i!=0):
             x.append(int(row[0]))
             y.append(float(row[1]))
-        else:
-            plt.xlabel(row[0])
-            plt.ylabel(row[1])
+        #else:
+            #plt.xlabel(row[0])
+            #plt.ylabel(row[1])
         i+=1
-
+        
+theta0_min = min(y)-13.5
+theta0_max = max(y)+10
 theta0_no = 100
+
 theta1_min = -10
-theta1_max = 10
-theta1_no = 100
+theta1_max = 100
+theta1_no = 1000
 
 theta0_final = []
 theta1_final = []
@@ -34,15 +37,17 @@ def line_maker(t0, t1, color):
     plt.plot(x,y_final, color)
 
 def rectifier(theta0_temp1, theta1_temp1, J_temp1):
-    theta0_final.append(theta0_temp1)
-    theta1_final.append(theta1_temp1)
-    J_final.append(J_temp1)
+    for i in range(0, len(theta1_temp1)):
+        if(theta1_temp1[i] not in theta1_final):
+            theta0_final.append(theta0_temp1[i])
+            theta1_final.append(theta1_temp1[i])
+            J_final.append(J_temp1[i])
 
 def cost_function():
     theta0_temp = []
     theta1_temp = []
     J_temp = []
-    for k in np.linspace(int(min(y))-10, int(max(y))+10, theta0_no):
+    for k in np.linspace(theta0_min, theta0_max, theta0_no):
         J = []
         theta1 = []
         
@@ -60,11 +65,13 @@ def cost_function():
 
 #Making the cost function (J)
 cost_function()
-print(min(theta1_final))
+print(min(J_final))
 
 #ploting J vs theta1 graph
 plt.plot(theta1_final, J_final, 'b--o')
-plt.axis([0,max(theta1_final)+1, 0,max(J_final)+1])
+plt.axis([min(theta1_final)-1,max(theta1_final)+1, 0,max(J_final)+1])
+plt.xlabel('Theta1')
+plt.ylabel('Cost Function (J)')
 
 #Regression Straight Line
 #line_maker(theta0_final[J_final.index(min(J_final))],theta1_final[J_final.index(min(J_final))], 'g')
@@ -74,3 +81,5 @@ plt.axis([0,max(theta1_final)+1, 0,max(J_final)+1])
 #plt.axis([0,max(x)+1, 0,max(y)+1])
 
 plt.show()
+plt.show()
+
