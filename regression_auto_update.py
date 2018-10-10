@@ -3,19 +3,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from numpy import array
 
-alpha   = 1
-
-t0_prev = 10
-t1_prev = 10
-J_prev  = 100
-
-t0      = 0
-t1      = 0
-J       = 0
-
-t0_err  = 0.001
-t1_err  = 0.001
-J_err   = 0.01
+alpha   = 0.004
+max_run = 1000
+J       = 10
+J_prev  = 20
+J_err   = 0.0001
 
 with open('regression_dataset.csv') as csv_file:
     csv_reader = reader(csv_file, delimiter=',')
@@ -30,41 +22,42 @@ with open('regression_dataset.csv') as csv_file:
             plt.xlabel(row[0])
             plt.ylabel(row[1])
         i+=1
-    plt.plot(x,y,'r^')
+    #plt.subplot(211)
     plt.axis([0,max(x)+1, 0,max(y)+1])
+    plt.plot(x, y, 'r*')
 
+
+t0_prev = y[1]
+t1_prev = (y[1]-y[0])/(x[1]-x[0])
+
+t0      = y[2]
+t1      = (y[2]-y[1])/(x[2]-x[1])
 
 def line_maker(t0_plot, t1_plot, color):
     y_final = []
     for i in range(len(x)):
         y_final.append(t0_plot + t1_plot*x[i])
-
+    #plt.subplot(212)
+    #plt.axis([0,max(x)+1, min(y_final), max(y_final)])
     plt.plot(x,y_final, color)
 
-"""def cost_function(t0_cur, t1_cur):
-    J_cur  = (0.5 * sum([(t0_cur+t1_cur*x[j]-y[j])**2 for j in range(len(x))]))/len(x)
-    t0_cur = t0_cur - alpha*((J - J_prev)/(t0_cur - t0_prev))
-    t1_cur = t1_cur - alpha*((J - J_prev)/(t1_cur - t1_prev))
-    
-    t0_prev = t0_cur
-    t1_prev = t1_cur
-    J_prev  = J_cur
-
-    return t0_cur, t1_cur, J_cur"""
-
-i=0
-while(abs(J-J_prev) > J_err):
-    #t0, t1, J = cost_function(t0, t1)
+i = 0
+while(abs(J-J_prev) > J_err and i < max_run):
     J_prev  = J
-    J  = (0.5 * sum([(t0+t1*x[j]-y[j])**2 for j in range(len(x))]))/len(x)
-    print(J)
-    #t0 = t0 - alpha*((J - J_prev)/(t0 - t0_prev))
-    #t1 = t1 - alpha*((J - J_prev)/(t1 - t1_prev))
-    
+    J       = (0.5 * sum([(t0 + t1*x[j]-y[j])**2 for j in range(len(x))]))/len(x)
+    t0_temp = t0 - alpha*((J - J_prev)/(t0 - t0_prev))
+    t1_temp = t1 - alpha*((J - J_prev)/(t1 - t1_prev))
+
+    print(t0, t1, J)
+
     t0_prev = t0
     t1_prev = t1
-    
+
+    t0      = t0_temp
+    t1      = t1_temp
+        
     i += 1
-print(i)
-line_maker(t0, t1, 'r')
+    
+line_maker(t0, t1, 'b')
 plt.show()
+

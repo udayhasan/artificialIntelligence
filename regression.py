@@ -12,9 +12,9 @@ with open('regression_dataset.csv') as csv_file:
         if(i!=0):
             x.append(int(row[0]))
             y.append(float(row[1]))
-        #else:
-            #plt.xlabel(row[0])
-            #plt.ylabel(row[1])
+        else:
+            plt.xlabel(row[0])
+            plt.ylabel(row[1])
         i+=1
         
 theta0_min = min(y)-13.5
@@ -68,18 +68,17 @@ cost_function()
 print(min(J_final))
 
 #ploting J vs theta1 graph
-plt.plot(theta1_final, J_final, 'b--o')
-plt.axis([min(theta1_final)-1,max(theta1_final)+1, 0,max(J_final)+1])
-plt.xlabel('Theta1')
-plt.ylabel('Cost Function (J)')
+#plt.plot(theta1_final, J_final, 'b--o')
+#plt.axis([min(theta1_final)-1,max(theta1_final)+1, 0,max(J_final)+1])
+#plt.xlabel('Theta1')
+#plt.ylabel('Cost Function (J)')
 
 #Regression Straight Line
-#line_maker(theta0_final[J_final.index(min(J_final))],theta1_final[J_final.index(min(J_final))], 'g')
+line_maker(theta0_final[J_final.index(min(J_final))],theta1_final[J_final.index(min(J_final))], 'g')
 
 #Plotting original values
-#plt.plot(x,y,'r^')
-#plt.axis([0,max(x)+1, 0,max(y)+1])
+plt.plot(x,y,'r^')
+plt.axis([0,max(x)+1, 0,max(y)+1])
 
-plt.show()
 plt.show()
 
